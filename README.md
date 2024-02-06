@@ -30,17 +30,13 @@ don't need to add them as dependencies.
 
 ```rust
 fn main() {
-    let client = sentry_tauri::sentry::init((
+    let client = sentry_tauri::init((
         "__YOUR_DSN__",
-        sentry_tauri::sentry::ClientOptions {
-            release: sentry_tauri::sentry::release_name!(),
-            ..Default::default()
+        sentry_tauri::ClientOptions {
+          release: sentry_tauri::sentry::release_name!(),
+          ..Default::default()
         },
     ));
-
-    // Everything before here runs in both app and crash reporter processes
-    let _guard = sentry_tauri::minidump::init(&client);
-    // Everything after here runs in only the app process
 
     tauri::Builder::default()
         .plugin(sentry_tauri::plugin())

@@ -8,9 +8,39 @@ repository = "https://github.com/timfish/sentry-tauri"
 version = "0.2.0"
 
 [dependencies]
-base64 = "0.21"
-sentry = "0.31"
-sentry-rust-minidump = "0.6"
-serde = "1"
-tauri = "1"
-thiserror = "1"
+base64 = { version = "0.21" }
+minidump-writer = { version = "0.8", optional = true }
+sentry = { version = "0.32", default-features = false }
+sentry-backtrace = { version = "0.32", default-features = false }
+serde = { version = "1" }
+tauri = { version = "1" }
+libc = { version = "0.2" }
+windows-sys = { version = "0.52" }
+
+[features]
+default = ["backtrace", "contexts", "debug-images", "panic", "transport"]
+UNSTABLE_metrics = ["sentry/UNSTABLE_metrics"]
+
+# default integrations
+backtrace = ["sentry/backtrace"]
+contexts = ["sentry/contexts"]
+panic = ["dep:minidump-writer"]
+# other integrations
+anyhow = ["sentry/anyhow"]
+debug-images = ["sentry/debug-images"]
+log = ["sentry/log"]
+slog = ["sentry/slog"]
+tracing = ["sentry/tracing"]
+# other features
+test = ["sentry/test"]
+debug-logs = ["sentry/debug-logs"]
+# transports
+transport = ["sentry/transport"]
+reqwest = ["sentry/reqwest"]
+curl = ["sentry/curl"]
+surf-h1 = ["sentry/surf-h1"]
+surf = ["sentry/surf"]
+ureq = ["sentry/ureq"]
+# transport settings
+native-tls = ["sentry/native-tls"]
+rustls = ["sentry/rustls"]

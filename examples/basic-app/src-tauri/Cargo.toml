@@ -13,10 +13,10 @@ tauri-build = {version = "1.0.0", features = [] }
 
 [dependencies]
 sadness-generator = "0.5"
-sentry-tauri = {path = "../../../"}
-serde = {version = "1.0", features = ["derive"] }
+sentry-tauri = { path = "../../../", default-features = true }
+serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-tauri = {version = "1", features = ["api-all"] }
+tauri = { version = "1", features = ["api-all"] }
 
 [features]
 # by default Tauri runs in production mode

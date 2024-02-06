@@ -24,16 +24,14 @@ fn native_crash() {
 }
 
 fn main() {
-    let client = sentry::init((
+    let _client = sentry_tauri::init((
         "https://233a45e5efe34c47a3536797ce15dafa@o447951.ingest.sentry.io/5650507",
-        sentry::ClientOptions {
+        sentry_tauri::ClientOptions {
             release: sentry::release_name!(),
             debug: true,
             ..Default::default()
         },
     ));
-
-    let _guard = sentry_tauri::minidump::init(&client);
 
     tauri::Builder::default()
         .plugin(sentry_tauri::plugin())

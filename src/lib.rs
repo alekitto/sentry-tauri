@@ -1,4 +1,7 @@
-use sentry::{add_breadcrumb, capture_event, protocol::Event, Breadcrumb};
+#[cfg(feature = "panic")]
+mod panic;
+
+use sentry::{add_breadcrumb, capture_event, protocol::Event, Breadcrumb, ClientInitGuard};
 use tauri::{
     generate_handler,
     plugin::{Builder, TauriPlugin},
@@ -6,24 +9,42 @@ use tauri::{
 };
 
 pub use sentry;
-pub use sentry_rust_minidump as minidump;
+pub use sentry::ClientOptions;
+
+#[cfg(feature = "panic")]
+pub use panic::PanicIntegration;
 
 #[derive(Debug, Clone)]
 pub struct JavaScriptOptions {
-    inject: bool,
-    debug: bool,
+    pub inject: bool,
+    pub debug: bool,
 }
 
 impl Default for JavaScriptOptions {
     fn default() -> Self {
+        #[cfg(not(debug_assertions))]
+        let debug = false;
+        #[cfg(debug_assertions)]
+        let debug = true;
+
         Self {
             inject: true,
-            #[cfg(not(debug_assertions))]
-            debug: false,
-            #[cfg(debug_assertions)]
-            debug: true,
+            debug,
         }
     }
+}
+
+pub fn init(options: impl Into<ClientOptions>) -> ClientInitGuard {
+    #[allow(unused_mut)]
+    let mut options = options.into();
+    if options.default_integrations {
+        #[cfg(feature = "panic")]
+        options
+            .integrations
+            .insert(0, std::sync::Arc::new(PanicIntegration::default()))
+    }
+
+    sentry::init(options)
 }
 
 #[derive(Debug, Clone, Default)]
@@ -42,9 +63,9 @@ fn breadcrumb<R: Runtime>(_app: AppHandle<R>, breadcrumb: Breadcrumb) {
     add_breadcrumb(breadcrumb);
 }
 
-pub fn plugin<R>() -> tauri::plugin::TauriPlugin<R>
+pub fn plugin<R>() -> TauriPlugin<R>
 where
-    R: tauri::Runtime,
+    R: Runtime,
 {
     plugin_with_options(Default::default())
 }
