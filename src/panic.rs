@@ -51,7 +51,7 @@ fn write_minidump() -> Result<(PathBuf, Vec<u8>), Box<dyn std::error::Error>> {
 #[cfg(target_os = "macos")]
 fn write_minidump() -> Result<(PathBuf, Vec<u8>), Box<dyn std::error::Error>> {
     // Defaults to dumping the current process and thread.
-    let mut writer = minidump_writer::minidump_writer::MinidumpWriter::new(None, None)?;
+    let mut writer = minidump_writer::minidump_writer::MinidumpWriter::new(None, None);
 
     let dump_fn = get_dump_fn();
     let mut minidump_file = std::fs::File::create(&dump_fn)?;
