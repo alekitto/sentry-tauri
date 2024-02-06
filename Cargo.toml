@@ -15,7 +15,7 @@ sentry-backtrace = { version = "0.32", default-features = false }
 serde = { version = "1" }
 tauri = { version = "1" }
 libc = { version = "0.2" }
-windows-sys = { version = "0.52" }
+windows-sys = { version = "0.52", features = ["Win32_System_Threading"] }
 
 [features]
 default = ["backtrace", "contexts", "debug-images", "panic", "transport"]

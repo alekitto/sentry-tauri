@@ -16,6 +16,7 @@
 
 #![warn(missing_docs)]
 
+use std::io::{Read, Seek};
 use std::panic::{self, PanicInfo};
 use std::path::PathBuf;
 use std::sync::Once;
@@ -64,19 +65,23 @@ fn write_minidump() -> Result<(PathBuf, Vec<u8>), Box<dyn std::error::Error>> {
     let dump_fn = get_dump_fn();
     let mut minidump_file = std::fs::File::create(&dump_fn)?;
 
-    Ok((
-        dump_fn,
-        // Attempts to write the minidump
-        minidump_writer::minidump_writer::MinidumpWriter::dump_local_context(
-            // The exception code, presumably one of STATUS_*. Defaults to STATUS_NONCONTINUABLE_EXCEPTION if not specified
-            None,
-            // If not specified, uses the current thread as the "crashing" thread,
-            // so this is equivalent to passing `None`, but it could be any thread
-            // in the process
-            Some(unsafe { windows_sys::Win32::System::Threading::GetCurrentThreadId() }),
-            &mut minidump_file,
-        )?,
-    ))
+    // Attempts to write the minidump
+    minidump_writer::minidump_writer::MinidumpWriter::dump_local_context(
+        // The exception code, presumably one of STATUS_*. Defaults to STATUS_NONCONTINUABLE_EXCEPTION if not specified
+        None,
+        // If not specified, uses the current thread as the "crashing" thread,
+        // so this is equivalent to passing `None`, but it could be any thread
+        // in the process
+        Some(unsafe { windows_sys::Win32::System::Threading::GetCurrentThreadId() }),
+        None,
+        &mut minidump_file,
+    )?;
+
+    let mut buf = vec![];
+    minidump_file.seek(std::io::SeekFrom::Start(0))?;
+    minidump_file.read_to_end(&mut buf)?;
+
+    Ok((dump_fn, buf))
 }
 
 /// A panic handler that sends to Sentry.
