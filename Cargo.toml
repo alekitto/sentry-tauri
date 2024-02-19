@@ -1,19 +1,24 @@
 [package]
 description = "An experimental Tauri Plugin for Sentry"
 edition = "2021"
-license = "MIT OR Apache-2.0"
+rust-version = "1.70"
+license = "MIT"
 name = "sentry-tauri"
 readme = "README.md"
-repository = "https://github.com/timfish/sentry-tauri"
-version = "0.2.0"
+repository = "https://github.com/alekitto/sentry-tauri"
+version = "2.0.0"
+
+[build-dependencies]
+tauri-plugin = { version = "2.0.0-beta", features = ["build"] }
 
 [dependencies]
 base64 = { version = "0.21" }
 minidump-writer = { version = "0.8", optional = true }
+openssl = { version = "0.10", features = ["vendored"] }
 sentry = { version = "0.32", default-features = false }
 sentry-backtrace = { version = "0.32", default-features = false }
 serde = { version = "1" }
-tauri = { version = "1" }
+tauri = { version = "^2.0.0-beta" }
 libc = { version = "0.2" }
 windows-sys = { version = "0.52", features = ["Win32_System_Threading"] }
 

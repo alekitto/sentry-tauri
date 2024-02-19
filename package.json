@@ -13,18 +13,19 @@
     "build:ts": "tsc --project ./js/tsconfig.json && rollup -c ./js/rollup.config.js",
     "build:rust": "cargo build",
     "example": "cd examples/basic-app && yarn && yarn tauri dev",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "build"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "13.3.0",
     "@sentry/browser": "^7.57.0",
     "@sentry/types": "^7.57.0",
+    "@tauri-apps/cli": "^2.0.0-beta.0",
     "rollup": "2.75.7",
     "rollup-plugin-terser": "7.0.2",
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@tauri-apps/api": "^1.4.0",
+    "@tauri-apps/api": "^2.0.0-beta.0",
     "tslib": "^2.6.0"
   }
 }

@@ -16,6 +16,7 @@
 
 #![warn(missing_docs)]
 
+#[cfg(target_os = "windows")]
 use std::io::{Read, Seek};
 use std::panic::{self, PanicInfo};
 use std::path::PathBuf;
@@ -91,23 +92,28 @@ fn write_minidump() -> Result<(PathBuf, Vec<u8>), Box<dyn std::error::Error>> {
 /// Sentry panic handler.
 pub fn panic_handler(info: &PanicInfo<'_>) {
     sentry::with_integration(|integration: &PanicIntegration, hub| {
-        hub.with_scope(
-            |scope| {
-                let Ok((filename, buffer)) = write_minidump() else {
-                    return;
-                };
+        // Android and iOS are not supported yet by minidump-writer.
+        // Other platforms are not supported, and probably never will.
+        #[cfg(any(target_os = "linux", target_os = "macos", target_os = "windows"))]
+        {
+            hub.with_scope(
+                |scope| {
+                    let Ok((filename, buffer)) = write_minidump() else {
+                        return;
+                    };
 
-                scope.add_attachment(Attachment {
-                    buffer,
-                    filename: filename.to_string_lossy().to_string(),
-                    ty: Some(AttachmentType::Minidump),
-                    ..Default::default()
-                });
-            },
-            || {
-                hub.capture_event(integration.event_from_panic_info(info));
-            },
-        );
+                    scope.add_attachment(Attachment {
+                        buffer,
+                        filename: filename.to_string_lossy().to_string(),
+                        ty: Some(AttachmentType::Minidump),
+                        ..Default::default()
+                    });
+                },
+                || {
+                    hub.capture_event(integration.event_from_panic_info(info));
+                },
+            );
+        }
 
         if let Some(client) = hub.client() {
             client.flush(None);
