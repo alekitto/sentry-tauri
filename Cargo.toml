@@ -14,7 +14,7 @@ tauri-plugin = { version = "2.0.0-beta", features = ["build"] }
 [dependencies]
 base64 = { version = "0.21" }
 minidump-writer = { version = "0.8", optional = true }
-openssl = { version = "0.10", features = ["vendored"] }
+openssl = { version = "0.10" }
 sentry = { version = "0.32", default-features = false }
 sentry-backtrace = { version = "0.32", default-features = false }
 serde = { version = "1" }
@@ -24,6 +24,7 @@ windows-sys = { version = "0.52", features = ["Win32_System_Threading"] }
 
 [features]
 default = ["backtrace", "contexts", "debug-images", "panic", "transport"]
+openssl-vedored = ["openssl/vendored"]
 UNSTABLE_metrics = ["sentry/UNSTABLE_metrics"]
 
 # default integrations
