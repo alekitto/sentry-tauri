@@ -17,7 +17,6 @@
   "build": {
     "beforeBuildCommand": "",
     "beforeDevCommand": "",
-    "devUrl": "../dist",
     "frontendDist": "../dist"
   },
   "bundle": {

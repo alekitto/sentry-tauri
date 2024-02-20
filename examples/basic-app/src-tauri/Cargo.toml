@@ -13,10 +13,10 @@ tauri-build = {version = "2.0.0-beta", features = [] }
 
 [dependencies]
 sadness-generator = "0.5"
-sentry-tauri = { path = "../../../", default-features = true }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 tauri = { version = "2.0.0-beta", features = [] }
+tauri-plugin-sentry = { path = "../../../", default-features = true }
 
 [features]
 # by default Tauri runs in production mode
@@ -27,4 +27,5 @@ default = ["custom-protocol"]
 custom-protocol = ["tauri/custom-protocol"]
 
 [lib]
+name = "app_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]

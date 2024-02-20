@@ -273,6 +273,13 @@
           "enum": [
             "deny-event"
           ]
+        },
+        {
+          "description": "default -> Allows send sentry event and breadcrumbs",
+          "type": "string",
+          "enum": [
+            "default"
+          ]
         }
       ]
     }

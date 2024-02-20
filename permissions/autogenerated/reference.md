@@ -16,3 +16,7 @@ Enables the event command without any pre-configured scope.
 
 Denies the event command without any pre-configured scope.
 
+## default
+
+Allows send sentry event and breadcrumbs
+

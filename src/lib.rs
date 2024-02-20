@@ -2,10 +2,11 @@
 mod panic;
 
 use sentry::{add_breadcrumb, capture_event, protocol::Event, Breadcrumb, ClientInitGuard};
+use std::time::Duration;
 use tauri::{
     generate_handler,
     plugin::{Builder, TauriPlugin},
-    AppHandle, Runtime,
+    AppHandle, Manager, RunEvent, Runtime,
 };
 
 pub use sentry;
@@ -34,22 +35,10 @@ impl Default for JavaScriptOptions {
     }
 }
 
-pub fn init(options: impl Into<ClientOptions>) -> ClientInitGuard {
-    #[allow(unused_mut)]
-    let mut options = options.into();
-    if options.default_integrations {
-        #[cfg(feature = "panic")]
-        options
-            .integrations
-            .insert(0, std::sync::Arc::new(PanicIntegration::default()))
-    }
-
-    sentry::init(options)
-}
-
 #[derive(Debug, Clone, Default)]
 pub struct Options {
     pub javascript: JavaScriptOptions,
+    pub client: ClientOptions,
 }
 
 #[tauri::command]
@@ -63,16 +52,35 @@ fn breadcrumb<R: Runtime>(_app: AppHandle<R>, breadcrumb: Breadcrumb) {
     add_breadcrumb(breadcrumb);
 }
 
-pub fn plugin<R>() -> TauriPlugin<R>
+pub fn init<R>(options: Options) -> TauriPlugin<R>
 where
     R: Runtime,
 {
-    plugin_with_options(Default::default())
-}
+    let sentry_client = {
+        #[allow(unused_mut)]
+        let mut options = options.client;
+        if options.default_integrations {
+            #[cfg(feature = "panic")]
+            options
+                .integrations
+                .insert(0, std::sync::Arc::new(PanicIntegration::default()))
+        }
 
-pub fn plugin_with_options<R: Runtime>(options: Options) -> TauriPlugin<R> {
-    let mut plugin_builder =
-        Builder::new("sentry").invoke_handler(generate_handler![event, breadcrumb]);
+        sentry::init(options)
+    };
+
+    let mut plugin_builder = Builder::new("sentry")
+        .invoke_handler(generate_handler![event, breadcrumb])
+        .setup(|app, _api| {
+            app.manage(sentry_client);
+            Ok(())
+        })
+        .on_event(|app, event| {
+            if let RunEvent::Exit = event {
+                let client = app.state::<ClientInitGuard>();
+                client.flush(Some(Duration::from_secs(5)));
+            }
+        });
 
     if options.javascript.inject {
         plugin_builder = plugin_builder.js_init_script(
