@@ -11,7 +11,7 @@
 //! might optionally create a sentry `Event` out of a `PanicInfo`.
 //!
 //! ```
-//! let integration = sentry_tauri::PanicIntegration::default().add_extractor(|info| None);
+//! let integration = tauri_plugin_sentry::PanicIntegration::default().add_extractor(|info| None);
 //! ```
 
 #![warn(missing_docs)]

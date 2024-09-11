@@ -49,6 +49,11 @@ fn event<R: Runtime>(_app: AppHandle<R>, mut event: Event<'static>) {
 
 #[tauri::command]
 fn breadcrumb<R: Runtime>(_app: AppHandle<R>, breadcrumb: Breadcrumb) {
+    if breadcrumb.category.as_ref().is_some_and(|s| s == "fetch") &&
+        breadcrumb.message.as_ref().is_some_and(|m| m.contains("plugin%3Asentry%7Cbreadcrumb")) {
+        return;
+    }
+
     add_breadcrumb(breadcrumb);
 }
 
