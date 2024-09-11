@@ -18,6 +18,7 @@ minidump-writer = { version = "0.10", optional = true }
 openssl = { version = "0.10" }
 sentry = { version = "0.34", default-features = false }
 sentry-backtrace = { version = "0.34", default-features = false }
+sentry-log = { version = "0.34" }
 serde = { version = "1" }
 tauri = { version = "^2.0.0-beta" }
 libc = { version = "0.2" }

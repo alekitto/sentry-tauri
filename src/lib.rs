@@ -11,6 +11,8 @@ use tauri::{
 
 pub use sentry;
 pub use sentry::ClientOptions;
+pub use sentry_log;
+pub use sentry_log::SentryLogger;
 
 #[cfg(feature = "panic")]
 pub use panic::PanicIntegration;
