@@ -9,7 +9,7 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "yarn build:ts && yarn build:rust",
+    "build": "build:ts && build:rust",
     "build:ts": "tsc --project ./js/tsconfig.json && rollup -c ./js/rollup.config.js",
     "build:rust": "cargo build",
     "example": "cd examples/basic-app && yarn && yarn tauri dev",
@@ -17,16 +17,15 @@
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "13.3.0",
-    "@sentry/browser": "^7.57.0",
-    "@sentry/types": "^7.57.0",
-    "@tauri-apps/cli": "^2.0.0-beta.0",
+    "@sentry/browser": "^8.30.0",
+    "@sentry/types": "^8.30.0",
+    "@tauri-apps/cli": "^2.0.0-rc.13",
     "rollup": "2.75.7",
     "rollup-plugin-terser": "7.0.2",
-    "typescript": "^5.1.6"
+    "typescript": "^5.6.2"
   },
   "dependencies": {
-    "@tauri-apps/api": "^2.0.0-beta.0",
-    "tslib": "^2.6.0"
-  },
-  "packageManager": "yarn@1.22.19+sha1.4ba7fc5c6e704fce2066ecbfb0b0d8976fe62447"
+    "@tauri-apps/api": "^2.0.0-rc.4",
+    "tslib": "^2.7.0"
+  }
 }

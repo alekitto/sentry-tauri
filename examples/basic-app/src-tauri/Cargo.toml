@@ -9,14 +9,15 @@ repository = ""
 version = "0.1.0"
 
 [build-dependencies]
-tauri-build = {version = "2.0.0-beta", features = [] }
+tauri-build = {version = "2.0.0-rc", features = [] }
 
 [dependencies]
-sadness-generator = "0.5"
+sadness-generator = "0.6"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
-tauri = { version = "2.0.0-beta", features = [] }
+tauri = { version = "2.0.0-rc", features = [] }
 tauri-plugin-sentry = { path = "../../../", default-features = true }
+time = ">=0.3.35"
 
 [features]
 # by default Tauri runs in production mode

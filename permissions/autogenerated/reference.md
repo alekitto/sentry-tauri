@@ -1,22 +1,68 @@
-# Permissions
-
-## allow-breadcrumb
-
-Enables the breadcrumb command without any pre-configured scope.
-
-## deny-breadcrumb
-
-Denies the breadcrumb command without any pre-configured scope.
-
-## allow-event
-
-Enables the event command without any pre-configured scope.
-
-## deny-event
-
-Denies the event command without any pre-configured scope.
-
-## default
+## Default Permission
 
 Allows send sentry event and breadcrumbs
 
+- `allow-event`
+- `allow-breadcrumb`
+
+## Permission Table 
+
+<table>
+<tr>
+<th>Identifier</th>
+<th>Description</th>
+</tr>
+
+
+<tr>
+<td>
+
+`sentry:allow-breadcrumb`
+
+</td>
+<td>
+
+Enables the breadcrumb command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`sentry:deny-breadcrumb`
+
+</td>
+<td>
+
+Denies the breadcrumb command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`sentry:allow-event`
+
+</td>
+<td>
+
+Enables the event command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`sentry:deny-event`
+
+</td>
+<td>
+
+Denies the event command without any pre-configured scope.
+
+</td>
+</tr>
+</table>

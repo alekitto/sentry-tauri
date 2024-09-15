@@ -11,6 +11,7 @@ use tauri::{
 
 pub use sentry;
 pub use sentry::ClientOptions;
+use sentry::protocol::Value;
 pub use sentry_log;
 pub use sentry_log::SentryLogger;
 
@@ -52,7 +53,9 @@ fn event<R: Runtime>(_app: AppHandle<R>, mut event: Event<'static>) {
 #[tauri::command]
 fn breadcrumb<R: Runtime>(_app: AppHandle<R>, breadcrumb: Breadcrumb) {
     if breadcrumb.category.as_ref().is_some_and(|s| s == "fetch") &&
-        breadcrumb.message.as_ref().is_some_and(|m| m.contains("plugin%3Asentry%7Cbreadcrumb")) {
+        breadcrumb.data.get("url").is_some_and(|u| {
+            matches!(u, Value::String(x) if x.contains("plugin%3Asentry%7Cbreadcrumb"))
+        }) {
         return;
     }
 
