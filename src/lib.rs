@@ -10,6 +10,8 @@ use tauri::{
 };
 
 pub use sentry;
+#[cfg(feature = "backtrace")]
+pub use sentry_backtrace;
 pub use sentry::ClientOptions;
 use sentry::protocol::Value;
 pub use sentry_log;
